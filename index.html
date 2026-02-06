@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Matrix Premium v9.1.1</title>
+
+    <style>
+        :root {
+            --bg-dark: #010a01; 
+            --card-base: rgba(0, 20, 0, 0.8);
+            --matrix-green: #00ff41;
+            --matrix-glow: rgba(0, 255, 65, 0.4);
+            --matrix-yellow: #ffd700;
+            --matrix-soft: #80ff9c;
+            --btn-dark: #001a00;
+            --text-main: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            margin: 0; padding: 12px;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex; flex-direction: column;
+            min-height: 100vh;
+        }
+
+        #header { text-align: center; margin-bottom: 20px; }
+        #header h1 { 
+            color: var(--matrix-green); 
+            letter-spacing: 10px; 
+            margin: 0; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            font-size: 2rem;
+            text-shadow: 0 0 15px var(--matrix-glow);
+        }
+        .edition-tag { 
+            color: var(--matrix-yellow); 
+            font-size: 0.8rem; 
+            font-weight: bold; 
+            letter-spacing: 4px; 
+            text-transform: uppercase; 
+            margin-top: 4px;
+        }
+        .version-tag { color: var(--matrix-soft); font-size: 0.65rem; font-weight: bold; }
+
+        #categories {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 6px; margin-bottom: 15px;
+        }
+
+        /* Standard Button-Stil für oben */
+        .cat-btn {
+            padding: 10px 2px; font-size: 0.7rem; font-weight: bold;
+            background: var(--btn-dark); color: var(--matrix-green);
+            border: 1px solid rgba(0, 255, 0, 0.2); border-radius: 6px;
+            cursor: pointer; text-transform: uppercase;
+        }
+
+        #card {
+            flex: 1;
+            background: var(--card-base);
+            border: 1px solid var(--matrix-green);
+            border-radius: 30px;
+            padding: 35px 25px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            position: relative; text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.15);
+            margin-bottom: 16px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        .top-meta {
+            position: absolute; top: 18px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between;
+            font-size: 0.65rem; color: var(--matrix-green);
+            text-transform: uppercase; letter-spacing: 2px;
+            opacity: 0.7;
+        }
+
+        .title { font-size: 1.8rem; font-weight: bold; color: #fff; margin-bottom: 16px; }
+        
+        .content { 
+            font-size: 1.35rem; line-height: 1.5; font-weight: 700; 
+            color: #ffffff; width: 100%; font-style: normal;
+        }
+
+        .quiz-row { display: flex; gap: 10px; width: 100%; margin-top: 20px; }
+        
+        /* Quiz-Buttons angepasst */
+        .quiz-action-btn {
+            flex: 1; padding: 18px; 
+            background: var(--btn-dark); color: var(--matrix-green); 
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            border-radius: 12px; font-weight: bold; text-transform: uppercase;
+        }
+
+        .feedback-btn {
+            width: 100%; margin-top: 20px; padding: 15px;
+            background: var(--matrix-green); color: black;
+            border: none; border-radius: 12px; font-weight: bold;
+        }
+
+        .card-index {
+            position: absolute; bottom: 13px;
+            font-size: 0.75rem; color: rgba(0, 255, 65, 0.4);
+            font-weight: bold; letter-spacing: 3px;
+        }
+
+        /* Nav-Buttons UNTEN angepasst an Stil OBEN */
+        .nav-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .nav-btn {
+            flex: 1; padding: 10px; 
+            background: var(--btn-dark); color: #fff; 
+            border: 1px solid rgba(0, 255, 0, 0.2); /* Gleiche Umrandung */
+            border-radius: 6px; /* Gleicher Radius wie oben */
+            font-weight: bold; text-transform: uppercase; font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        /* Philosophie-Button angepasst */
+        .phi-btn {
+            width: 100%; padding: 13px; 
+            background: var(--btn-dark); color: var(--matrix-yellow); 
+            border: 1px solid rgba(0, 255, 0, 0.2); /* Gleiche Umrandung */
+            border-radius: 6px; /* Gleicher Radius wie oben */
+            font-weight: bold; text-transform: uppercase;
+            margin-bottom: 8px; font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        #footer { text-align: center; font-size: 0.65rem; color: var(--matrix-soft); padding: 5px 0; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <h1>MATRIX-LernApp</h1>
+        <div class="edition-tag">Premium Edition</div>
+        <div class="version-tag">Version 9.1.1</div>
+    </div>
+
+    <div id="categories">
+        <button class="cat-btn" onclick="setCat('start')">Willkommen</button>
+        <button class="cat-btn" onclick="setCat('hauptfiguren')">Helden</button>
+        <button class="cat-btn" onclick="setCat('nebenfiguren')">Nebenfiguren</button>
+        <button class="cat-btn" onclick="setCat('orte')">Orte</button>
+        <button class="cat-btn" onclick="setCat('zeiten')">Zeiten</button>
+        <button class="cat-btn" onclick="setCat('symbole')">Symbole</button>
+        <button class="cat-btn" onclick="setCat('zitate')">Zitate</button>
+        <button class="cat-btn" onclick="setCat('quiz')">Quiz</button>
+        <button class="cat-btn" onclick="setCat('ausblick')">Ausblick</button>
+    </div>
+
+    <div id="card" onclick="cardClick()">
+        <div class="top-meta">
+            <span id="meta-cat">Archiv</span>
+            <span id="meta-info">Sync Active</span>
+        </div>
+        <div id="card-title" class="title">...</div>
+        <div id="card-content" class="content">...</div>
+        <div id="card-idx" class="card-index">1 / 20</div>
+    </div>
+
+    <div class="nav-row" id="main-nav">
+        <button class="nav-btn" onclick="prev(event)">◀ Zurück</button>
+        <button class="nav-btn" onclick="speak(event)">🔊 Vorlesen</button>
+        <button class="nav-btn" onclick="next(event)">Weiter ▶</button>
+    </div>
+
+    <button class="phi-btn" id="phi-btn" onclick="setCat('philosophie')">Matrix-Philosophie & Hintergründe</button>
+
+    <div id="footer">© 2026 Premium Edition | Version 9.1.1</div>
+
+    <script>
+        const data = {
+            start: [
+                {t:"Willkommen", i:"System", c:"Willkommen in der Matrix-LernApp."},
+                {t:"Login", i:"User", c:"Willkommen zurück im Kern, Madame und Monsieur."},
+                {t:"Datenbank", i:"Sync", c:"Alle 200 Datensätze wurden erfolgreich geladen."},
+                {t:"Steuerung", i:"Input", c:"Tippen Sie auf die Karte für den schnellen Vorlauf."},
+                {t:"Navigations-Ende", i:"Loop", c:"Am Ende einer Kategorie springt das System automatisch zurück."},
+                {t:"Sprachausgabe", i:"Audio", c:"Jeder Datensatz wird automatisch akustisch ausgegeben."},
+                {t:"Missionen", i:"Quiz", c:"Zehn gezielte Fragen testen Ihr Wissen über die Simulation."},
+                {t:"Zion-Mainframe", i:"Sektor", c:"Die Verbindung zur letzten freien Stadt ist stabil."},
+                {t:"Sicherheit", i:"Protokoll", c:"Ihre Fortschritte werden im lokalen Speicher gehalten."},
+                {t:"Code-Analyse", i:"Matrix", c:"Beobachten Sie den digitalen Regen für Anomalien."},
+                {t:"Erweiterung", i:"Content", c:"Inhalte wurden auf 20 Einträge pro Sektor maximiert."},
+                {t:"Agenten-Warnung", i:"Gefahr", c:"Halten Sie sich von Agenten fern, bis Ihr Training fertig ist."},
+                {t:"Rote Pille", i:"Wahl", c:"Sie haben die Wahrheit gewählt. Es gibt kein Zurück."},
+                {t:"Das Konstrukt", i:"Training", c:"Waffen, Kleidung und Wissen sind nur einen Klick entfernt."},
+                {t:"Die Crew", i:"Einheit", c:"Vertrauen Sie Trinity, Morpheus und dem Team."},
+                {t:"Befreiung", i:"Geist", c:"Die Regeln der Matrix sind nur Begrenzungen des Geistes."},
+                {t:"Technologie", i:"Hovercraft", c:"Die Nebukadnezar ist einsatzbereit."},
+                {t:"Geschichte", i:"Archiv", c:"Erfahren Sie alles über den Fall der Menschheit."},
+                {t:"Zukunft", i:"Voraussicht", c:"Das Schicksal von Zion liegt in Ihren Händen."},
+                {t:"Ende", i:"Abschluss", c:"Wählen Sie nun Ihre erste Kategorie oben."}
+            ],
+            hauptfiguren: [
+                {t:"Neo", i:"K. Reeves", c:"Thomas Anderson, der Auserwählte und Befreier Zions."},
+                {t:"Morpheus", i:"L. Fishburne", c:"Captain der Nebukadnezar und Mentor von Neo."},
+                {t:"Trinity", i:"C. Moss", c:"Die rechte Hand von Morpheus und Neos große Liebe."},
+                {t:"Agent Smith", i:"H. Weaving", c:"Das Antivirenprogramm, das zum autonomen Virus wurde."},
+                {t:"Das Orakel", i:"G. Foster", c:"Ein Programm, das den Menschen hilft, den Weg zu finden."},
+                {t:"Der Architekt", i:"H. Lambert", c:"Der Schöpfer der Matrix und Hüter der Ordnung."},
+                {t:"Cypher", i:"J. Pantoliano", c:"Verräter, der die Illusion der Wahrheit vorzog."},
+                {t:"Niobe", i:"J. Pinkett", c:"Fähigste Pilotin der Flotte und Captain der Logos."},
+                {t:"Merowinger", i:"L. Wilson", c:"Ein altes, mächtiges Programm, das Informationen hortet."},
+                {t:"Persephone", i:"M. Bellucci", c:"Sucht nach echten Emotionen im kalten Code."},
+                {t:"Der Schlüsselmacher", i:"R. Duk Kim", c:"Exilant, der jeden Hintereingang im System kennt."},
+                {t:"Link", i:"H. Perrineau", c:"Der Operator der Nebukadnezar nach Tank und Dozer."},
+                {t:"Dozer", i:"A. Rayment", c:"Ein gebürtiger Mensch aus Zion und Pilot."},
+                {t:"Tank", i:"M. Doran", c:"Dozer's Bruder und Operator der Crew."},
+                {t:"Seraph", i:"C. Ngai", c:"Der Leibwächter des Orakels und Hüter des Wissens."},
+                {t:"Der Trainman", i:"B. Young", c:"Ein Programm, das den Bahnhof zwischen den Welten kontrolliert."},
+                {t:"Sati", i:"T. Ali", c:"Ein Programmkind, das ohne Zweck erschaffen wurde."},
+                {t:"Ghost", i:"A. Wong", c:"Waffenexperte der Logos und Freund von Trinity."},
+                {t:"Bane", i:"I. Bliss", c:"Wurde von Agent Smith in der realen Welt übernommen."},
+                {t:"Kid", i:"C. Yates", c:"Ein Junge aus Zion, der durch Neo erwachte."}
+            ],
+            nebenfiguren: [
+                {t:"Mouse", i:"M. J. Doran", c:"Programmierer der 'Frau im roten Kleid'."},
+                {t:"Apoc", i:"J. Arahanga", c:"Besatzungsmitglied, zuständig für Kommunikation."},
+                {t:"Switch", i:"B. Taylor", c:"Trägt immer Weiß und ist eine loyale Kämpferin."},
+                {t:"Spoon Boy", i:"Z. De Castro", c:"Er lehrte Neo, dass es keinen Löffel gibt."},
+                {t:"Commander Lock", i:"H. J. Lennix", c:"Anführer der Verteidigungsstreitkräfte von Zion."},
+                {t:"Rat", i:"A. Crutchley", c:"Ein weiser Abgeordneter des Stadtrats von Zion."},
+                {t:"Zee", i:"N. Parker", c:"Partnerin von Link und Kämpferin in Zion."},
+                {t:"Die Zwillinge", i:"N. & A. Rayment", c:"Phantomatische Killer des Merowingers."},
+                {t:"Agent Jones", i:"R. Taylor", c:"Einer der Standard-Agenten der ersten Matrix."},
+                {t:"Agent Brown", i:"P. Goddard", c:"Unterstützt Smith bei der Jagd nach Morpheus."},
+                {t:"Agent Johnson", i:"D. Bernhardt", c:"Ein verbesserter Agent aus Matrix Reloaded."},
+                {t:"Agent Thompson", i:"M. McColm", c:"Einer der neuen Agenten des Upgrades."},
+                {t:"Agent Jackson", i:"D. O'Connor", c:"Teil des Trios, das die Stadt sichert."},
+                {t:"Choi", i:"M. Doran", c:"Der Kunde, der Neo am Anfang Disketten abkauft."},
+                {t:"DuJour", i:"A. Liddell", c:"Die Frau mit dem weißen Kaninchen-Tattoo."},
+                {t:"Maggie", i:"E. S. Travers", c:"Ärztin an Bord der Mjölnir."},
+                {t:"Mifune", i:"N. Parker", c:"Captain der APU-Korps in Zion."},
+                {t:"Cas", i:"G. Torres", c:"Witwe von Dozer und Bewohnerin Zions."},
+                {t:"Roland", i:"D. Roberts", c:"Strenger Captain der Mjölnir."},
+                {t:"Colt", i:"C. Quimby", c:"Crewmitglied unter Roland."}
+            ],
+            orte: [
+                {t:"Zion", i:"Sektor 1", c:"Die letzte Bastion der freien Menschheit."},
+                {t:"Nebukadnezar", i:"Schiff", c:"Das Hovercraft von Morpheus."},
+                {t:"Das Konstrukt", i:"Virtualität", c:"Weiße Ladezone für Waffen und Training."},
+                {t:"Die Quelle", i:"Ursprung", c:"Herz der Maschinenstadt Zero One."},
+                {t:"Zero One", i:"Hauptstadt", c:"Zentrum der maschinellen Zivilisation."},
+                {t:"Mobil Ave", i:"Bahnhof", c:"Ort zwischen der Matrix und der Maschinenwelt."},
+                {t:"Zions Tempel", i:"Versammlung", c:"Ort für Gebete und Versammlungen in Zion."},
+                {t:"Hel Club", i:"Vergnügen", c:"Der Nachtclub des Merowingers."},
+                {t:"Zions Hafen", i:"Logistik", c:"Anlegestelle für die Hovercraft-Flotte."},
+                {t:"Chateau", i:"Residenz", c:"Das prachtvolle Anwesen des Merowingers."},
+                {t:"Regierungsgebäude", i:"Showdown", c:"Ort der Rettung von Morpheus."},
+                {t:"Metacortex", i:"Arbeit", c:"Die Firma, in der Neo als Programmierer arbeitete."},
+                {t:"Appartement 101", i:"Heim", c:"Neos Wohnung in der simulierten Welt."},
+                {t:"Die Brücke", i:"Treffen", c:"Ort, an dem Neo Trinity zum ersten Mal trifft."},
+                {t:"Zions Rat", i:"Politik", c:"Sitzungssaal der Ältesten."},
+                {t:"Abwasserkanäle", i:"Realität", c:"Versteck für Hovercrafts vor Wächtern."},
+                {t:"Oberfläche", i:"Ödland", c:"Die zerstörte Erde unter dem dunklen Himmel."},
+                {t:"Die Batterien", i:"Energie", c:"Felder, in denen Menschen gezüchtet werden."},
+                {t:"Train Station", i:"Übergang", c:"Kontrolliert vom Trainman."},
+                {t:"Der Park", i:"Orakel", c:"Wo Neo oft Rat beim Orakel sucht."}
+            ],
+            zeiten: [
+                {t:"1999", i:"Matrix", c:"Das simulierte Jahr der ersten Matrix."},
+                {t:"2199", i:"Schätzung", c:"Das vermutete Jahr in der realen Welt."},
+                {t:"2139", i:"Krieg", c:"Ungefährer Beginn des Krieges Mensch gegen Maschine."},
+                {t:"Dunkler Himmel", i:"Historie", c:"Operation 'Dark Storm' zur Blockade der Sonne."},
+                {t:"Iteration 1", i:"Paradies", c:"Die erste Matrix war ein perfektes Paradies."},
+                {t:"Iteration 2", i:"Hölle", c:"Die zweite Matrix war eine Welt voller Leid."},
+                {t:"Iteration 6", i:"Gegenwart", c:"Die aktuelle Version mit Neo als Auserwähltem."},
+                {t:"Bullet Time", i:"Moment", c:"Sekundenbruchteile in extremer Verlangsamung."},
+                {t:"Neustart", i:"Zyklus", c:"Der Moment, in dem die Matrix resettet wird."},
+                {t:"Das Ende", i:"Prophezeiung", c:"Der Zeitpunkt des Friedensschlusses."},
+                {t:"Maschinen-Aufstieg", i:"Ursprung", c:"Die Zeit der ersten intelligenten Roboter."},
+                {t:"B1-66ER", i:"Vorfall", c:"Der erste Roboter, der sich wehrte."},
+                {t:"Zion-Gründung", i:"Widerstand", c:"Aufbau der Stadt nach dem ersten Fall."},
+                {t:"Die Prophezeiung", i:"Alter", c:"Entstand nach dem ersten Auserwählten."},
+                {t:"Der Friede", i:"Zukunft", c:"Das Ende des jahrhundertelangen Krieges."},
+                {t:"Die Renaissance", i:"Aufstieg", c:"Wiedergeburt der Technik durch KI."},
+                {t:"72 Stunden", i:"Countdown", c:"Zeit bis zur Zerstörung Zions."},
+                {t:"Das Erwachen", i:"Neo", c:"Moment, in dem Neo die Matrix als Code sieht."},
+                {t:"Die Ära der Wächter", i:"Bedrohung", c:"Jahrzehnte der Jagd auf Menschenschiffe."},
+                {t:"Ewiger Winter", i:"Klima", c:"Die Zeit ohne Sonnenlicht auf der Erdoberfläche."}
+            ],
+            symbole: [
+                {t:"Rote Pille", i:"Wahrheit", c:"Symbol für das Erwachen."},
+                {t:"Blaue Pille", i:"Lüge", c:"Symbol für die glückliche Ignoranz."},
+                {t:"Grüner Regen", i:"Code", c:"Die visuelle Darstellung der Matrix-Daten."},
+                {t:"Weißes Kaninchen", i:"Ruf", c:"Symbol für den Beginn der Heldenreise."},
+                {t:"Schwarze Katze", i:"Glitch", c:"Anzeichen für Code-Änderungen."},
+                {t:"Kein Löffel", i:"Erkenntnis", c:"Symbol für die Macht des Geistes."},
+                {t:"Sonnenbrille", i:"Distanz", c:"Schutz und Coolness der Wissenden."},
+                {t:"Leder/Lack", i:"Stil", c:"Uniform des Widerstands in der Matrix."},
+                {t:"Telefonzellen", i:"Ausgang", c:"Die Portale zurück in die Realität."},
+                {t:"Wächter", i:"Tod", c:"Die mechanische Bedrohung der realen Welt."},
+                {t:"Die 101", i:"Raum", c:"Neos Wohnungsnummer und Binärcode."},
+                {t:"Der Architekt", i:"Ordnung", c:"Symbol für kalte Logik."},
+                {t:"Das Orakel", i:"Chaos", c:"Symbol für Intuition."},
+                {t:"Handzeichen", i:"Stopp", c:"Neo hält Kugeln mit dem Willen auf."},
+                {t:"Die Frau in Rot", i:"Ablenkung", c:"Symbol für menschliche Schwäche."},
+                {t:"Keymaker-Schlüssel", i:"Zugang", c:"Jeder Schlüssel hat einen Zweck."},
+                {t:"Der Fernseher", i:"Medium", c:"Zeigt Neo seine alte Welt."},
+                {t:"Zions Feuer", i:"Leben", c:"Symbol für menschliche Wärme."},
+                {t:"Smith-Klon", i:"Virus", c:"Endlose Wiederholung des Bösen."},
+                {t:"Lichtstrahl", i:"Neo", c:"Das Ende von Smith durch Neos Licht."}
+            ],
+            zitate: [
+                {t:"Morpheus", i:"Realität", c:"'Willkommen in der Wüste der Realität.'"},
+                {t:"Neo", i:"Kampf", c:"'Ich kenne Kung Fu.'"},
+                {t:"Agent Smith", i:"Menschheit", c:"'Die Menschheit ist ein Virus.'"},
+                {t:"Das Orakel", i:"Wahl", c:"'Erkenne dich selbst.'"},
+                {t:"Morpheus", i:"Befreiung", c:"'Befreie deinen Geist.'"},
+                {t:"Trinity", i:"Glaube", c:"'Neo, ich liebe dich.'"},
+                {t:"Cypher", i:"Ignoranz", c:"'Unwissenheit ist ein Segen.'"},
+                {t:"Neo", i:"Wahl", c:"'Es gibt keinen Löffel.'"},
+                {t:"Morpheus", i:"Weg", c:"'Den Weg zu kennen ist nicht dasselbe, wie ihn zu gehen.'"},
+                {t:"Agent Smith", i:"Unvermeidlich", c:"'Das ist unvermeidlich.'"},
+                {t:"Der Architekt", i:"Logik", c:"'Deine Reaktion ist vorhersehbar.'"},
+                {t:"Neo", i:"Antwort", c:"'Nein.'"},
+                {t:"Morpheus", i:"Tür", c:"'Ich zeige dir die Tür, hindurchgehen musst du allein.'"},
+                {t:"Trinity", i:"Gefahr", c:"'Dodge this.'"},
+                {t:"Agent Smith", i:"Geruch", c:"'Es ist der Geruch.'"},
+                {t:"Morpheus", i:"System", c:"'Das System ist unser Feind.'"},
+                {t:"Das Orakel", i:"Keks", c:"'Hier, nimm einen Keks.'"},
+                {t:"Merowinger", i:"Ursache", c:"'Kausalität. Aktion, Reaktion.'"},
+                {t:"Neo", i:"Upgrade", c:"'Guns. Lots of guns.'"},
+                {t:"Morpheus", i:"Zeit", c:"'Die Zeit ist gegen uns.'"}
+            ],
+            philosophie: [
+                {t:"Wachowski-Sisters", i:"Regie", c:"Lana und Lilly Wachowski erschufen das Franchise 1999."},
+                {t:"Höhlengleichnis", i:"Platon", c:"Die Matrix ist eine moderne Version von Platons Höhle."},
+                {t:"Baudrillard", i:"Simulation", c:"'Simulacra and Simulation' war Pflichtlektüre für den Cast."},
+                {t:"Bullet Time", i:"Technik", c:"Revolutionäre 360-Grad-Kamerafahrten."},
+                {t:"Hongkong-Kino", i:"Action", c:"Starker Einfluss durch Yuen Woo-ping's Kampfchoreografie."},
+                {t:"Gnostizismus", i:"Religion", c:"Die Suche nach dem göttlichen Funken im falschen System."},
+                {t:"Cyberpunk", i:"Genre", c:"Matrix ist der Höhepunkt des Cyberpunk-Kinos."},
+                {t:"Keanu Reeves", i:"Besetzung", c:"Er verschenkte Teile seines Gehalts an das Effekte-Team."},
+                {t:"Einfluss", i:"Kultur", c:"Prägte Mode (Ledermäntel) und Begriffe wie 'Redpill'."},
+                {t:"Trans-Metapher", i:"Transformation", c:"Die Regisseure bestätigten die Matrix als Trans-Allegorie."},
+                {t:"Descartes", i:"Zweifel", c:"'Ich denke, also bin ich' im Kontext virtueller Welten."},
+                {t:"Nihilismus", i:"Thema", c:"Die Leere der simulierten Existenz."},
+                {t:"Kausalität", i:"Thema", c:"Der Merowinger als Vertreter des Determinismus."},
+                {t:"Freier Wille", i:"Thema", c:"Neos Fähigkeit, unvorhersehbare Entscheidungen zu treffen."},
+                {t:"Produktion", i:"Fakten", c:"Gedreht wurde hauptsächlich in Sydney, Australien."},
+                {t:"Oscar-Erfolg", i:"Auszeichnung", c:"Der Film gewann 4 Oscars für Technik und Schnitt."},
+                {t:"Soundtrack", i:"Musik", c:"Mix aus Elektro, Industrial und Orchester (Don Davis)."},
+                {t:"Legacy", i:"Erbe", c:"Matrix gilt als einer der besten Sci-Fi-Filme aller Zeiten."},
+                {t:"Code-Herkunft", i:"Fakt", c:"Der grüne Code besteht teils aus japanischen Sushi-Rezepten."},
+                {t:"Marketing", i:"Geheimnis", c:"Die Kampagne 'What is the Matrix?' war 1999 legendär."}
+            ],
+            quiz: [
+                {t:"", i:"Analyse", c:"Ist Neo der Auserwählte?", a:true},
+                {t:"", i:"Analyse", c:"Wurde die Matrix von Menschen erschaffen?", a:false},
+                {t:"", i:"Analyse", c:"Befreit die rote Pille den Geist?", a:true},
+                {t:"", i:"Analyse", c:"Ist Zion die Hauptstadt der Maschinen?", a:false},
+                {t:"", i:"Analyse", c:"Kann Agent Smith sich in der Matrix klonen?", a:true},
+                {t:"", i:"Analyse", c:"Ist Cypher ein loyaler Freund von Morpheus?", a:false},
+                {t:"", i:"Analyse", c:"Gibt es in der Matrix einen Löffel?", a:false},
+                {t:"", i:"Analyse", c:"Ist Trinity eine fähige Hackerin?", a:true},
+                {t:"", i:"Analyse", c:"Kontrolliert der Architekt das Orakel?", a:false},
+                {t:"", i:"Analyse", c:"Ist 'Bullet Time' ein Effekt der Matrix?", a:true}
+            ],
+            ausblick: [
+                {t:"Reloaded", i:"Teil 2", c:"Ausweitung des Universums und Kampf um Zion."},
+                {t:"Revolutions", i:"Teil 3", c:"Das finale Opfer von Neo für den Frieden."},
+                {t:"Resurrections", i:"Teil 4", c:"Lana Wachowskis Rückkehr zur Geschichte in 2021."},
+                {t:"Animatrix", i:"Anthologie", c:"Hintergrundgeschichten zur Entstehung des Krieges."},
+                {t:"Matrix 5", i:"Zukunft", c:"Ein neues Kapitel unter Regie von Drew Goddard angekündigt."},
+                {t:"Videospiele", i:"Interaktiv", c:"Enter the Matrix und Path of Neo erweitern die Story."},
+                {t:"Theorie", i:"Fandom", c:"Ist Morpheus eigentlich ein Programm? Eine Fan-Theorie."},
+                {t:"Comics", i:"Print", c:"Zahlreiche Kurzgeschichten vertiefen das Universum."},
+                {t:"VR-Erlebnis", i:"Technik", c:"Matrix Awakens zeigt die Power der Unreal Engine 5."},
+                {t:"Mode-Revival", i:"Style", c:"Der 'Matrix-Look' kehrt regelmäßig auf Laufstege zurück."},
+                {t:"Philosophie-Bücher", i:"Bildung", c:"Zahlreiche Analysen über die Ethik der Simulation."},
+                {t:"Soundtrack-Vinyl", i:"Kult", c:"Sammlereditionen der ikonischen Filmmusik."},
+                {t:"Matrix Online", i:"MMO", c:"Ein Spiel, das die Story nach Teil 3 fortsetzte."},
+                {t:"Cast-Reunion", i:"Event", c:"Reeves und Moss blieben über Jahrzehnte eng verbunden."},
+                {t:"Parodien", i:"Popkultur", c:"Von Shrek bis Scary Movie wurde Matrix oft zitiert."},
+                {t:"KI-Debatte", i:"Aktualität", c:"Der Film ist heute relevanter denn je (ChatGPT/KI)."},
+                {t:"4K-Remaster", i:"Qualität", c:"Die Filme wurden für modernste Heimkinos optimiert."},
+                {t:"Dokumentationen", i:"Hintergrund", c:"'The Matrix Revisited' zeigt die Entstehung."},
+                {t:"Fantreffen", i:"Community", c:"Weltweite 'Zion-Partys' und Conventions."},
+                {t:"Endlose Schleife", i:"Fazit", c:"Die Matrix wird uns immer begleiten. System Ende."}
+            ]
+        };
+
+        let cur = "start", idx = 0, score = 0, quizStep = 'question';
+
+        function update() {
+            const card = data[cur][idx];
+            document.getElementById('meta-cat').innerText = cur.toUpperCase();
+            document.getElementById('meta-info').innerText = card.i || "Active";
+            document.getElementById('card-title').innerText = card.t;
+            const cont = document.getElementById('card-content');
+            const nav = document.getElementById('main-nav');
+            const phi = document.getElementById('phi-btn');
+
+            if(cur === "quiz") {
+                nav.style.display = "none"; phi.style.display = "none";
+                if(quizStep === 'question') {
+                    cont.innerHTML = `<div style="margin-bottom:15px">${card.c}</div>
+                        <div class="quiz-row">
+                            <button class="quiz-action-btn" onclick="check(true, event)">JA</button>
+                            <button class="quiz-action-btn" onclick="check(false, event)">NEIN</button>
+                        </div>`;
+                }
+            } else {
+                nav.style.display = "flex"; phi.style.display = "block";
+                cont.innerText = card.c;
+            }
+            document.getElementById('card-idx').innerText = `${idx + 1} / ${data[cur].length}`;
+            speak();
+        }
+
+        function check(val, e) {
+            if(e) e.stopPropagation();
+            const correct = (val === data[cur][idx].a);
+            if(correct) score++;
+            
+            quizStep = 'feedback';
+            const cont = document.getElementById('card-content');
+            const fbText = correct ? 'KORREKT.' : 'FALSCH. Bitte probiere es noch einmal.';
+            cont.innerHTML = `<div style="font-size:1.8rem; font-weight:bold; color:${correct ? '#00ff41' : '#ff4444'}">${correct ? 'KORREKT' : 'FALSCH'}</div><button class="feedback-btn" onclick="nextQuizStep(event)">WEITER</button>`;
+            
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(fbText); u.lang = "de-DE"; speechSynthesis.speak(u);
+        }
+
+        function nextQuizStep(e) {
+            if(e) e.stopPropagation();
+            if(idx + 1 < data[cur].length) { idx++; quizStep = 'question'; update(); } 
+            else { showResult(); }
+        }
+
+        function showResult() {
+            const perc = Math.round((score / data[cur].length) * 100);
+            let rank = "Blaupillen-Level";
+            if(perc > 40) rank = "Widerstandskämpfer";
+            if(perc > 80) rank = "Der Auserwählte";
+
+            const resText = `Mission beendet. Ergebnis: ${score} von ${data[cur].length} Punkten. Ihr Rang: ${rank}.`;
+            const cont = document.getElementById('card-content');
+            cont.innerHTML = `<div style="color:var(--matrix-yellow); font-size:1.2rem;">MISSION BEENDET</div><div style="margin:15px 0; font-size:1.4rem;">${perc}% Erfolg</div><div style="color:var(--matrix-green); font-weight:bold;">${rank}</div><button class="feedback-btn" onclick="resetToStart(event)">ZURÜCK ZUR BASIS</button>`;
+            
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(resText); u.lang = "de-DE"; speechSynthesis.speak(u);
+        }
+
+        function cardClick() { if(cur !== "quiz") next(); }
+        function resetToStart(e) { if(e) e.stopPropagation(); cur = "start"; idx = 0; score = 0; quizStep = 'question'; update(); }
+        function setCat(c) { cur = c; idx = 0; score = 0; quizStep = 'question'; update(); }
+        function next(e) { if(e) e.stopPropagation(); idx = (idx + 1) % data[cur].length; update(); }
+        function prev(e) { if(e) e.stopPropagation(); idx = (idx - 1 + data[cur].length) % data[cur].length; update(); }
+        
+        function speak(e) { 
+            if(e) e.stopPropagation();
+            window.speechSynthesis.cancel();
+            const card = data[cur][idx];
+            const text = (card.t ? card.t + ". " : "") + card.c;
+            const u = new SpeechSynthesisUtterance(text); u.lang = "de-DE"; speechSynthesis.speak(u);
+        }
+
+        update();
+    </script>
+</body>
+</html>
